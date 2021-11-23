@@ -51,7 +51,7 @@ public class Arbre {
         }
 
         public String toString() {
-            return this.nom + " ["+this.fils.size()+"]";
+            return this.nom + " ["+this.taille+"]";
         }
 
         private void setFils(File file) {
