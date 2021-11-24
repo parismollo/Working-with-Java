@@ -1,8 +1,6 @@
 package src.test.java;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-
 import src.main.java.Arbre;
 import src.main.java.StringTransformation;
 
@@ -10,7 +8,8 @@ public class ArbreUTest {
     public static void main(String[] args) {
         // exo1();
         // exo4();
-        exo4Noeuds();
+        // exo4Noeuds();
+        exo5Traverser();
     }
 
     public static void exo1() {
@@ -37,7 +36,16 @@ public class ArbreUTest {
             root.afficher();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+        }   
+    }
+
+    public static void exo5Traverser() {
+        String ext = "java";
+        try {
+            Arbre root = new Arbre("C:/Users/paris/UNIVERSITE_DE_PARIS/POO/TD1/Scrabble");
+            root.traverser(ext);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
-        
     }
 }

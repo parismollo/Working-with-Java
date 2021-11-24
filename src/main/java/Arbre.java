@@ -2,7 +2,6 @@ package src.main.java;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import src.main.java.StringTransformation;
 
 public class Arbre {
     public Noeud racine;
@@ -14,6 +13,10 @@ public class Arbre {
         } else {
             this.racine = new Noeud(file);
         }
+    }
+
+    public void traverser(String extension) {
+        this.racine.traverser(extension);
     }
 
     public void afficher() {
@@ -45,9 +48,28 @@ public class Arbre {
             }
         }
 
-        public String setNom(String s) {
+        public void traverser(String extension) {
+            int l = getNom().split("[.]").length;
+            String fileExtension = getNom().split("[.]")[l-1];
+            if(!getRepertoire()) {
+                if (fileExtension.equals(extension)) {
+                    System.out.println(this.toString());
+                    return;
+                }
+            } else {
+                for (Noeud noeud : fils) {
+                    noeud.traverser(extension);
+                }
+            }
+        }
+
+        public String setNom(String s) { // Fix this
             this.nom = s;
             return s;
+        }
+
+        public String getNom() {
+            return this.nom;
         }
 
         public void map(StringTransformation t) {
