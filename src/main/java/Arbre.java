@@ -2,7 +2,6 @@ package src.main.java;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-
 public class Arbre {
     public Noeud racine;
 
@@ -28,6 +27,10 @@ public class Arbre {
         this.racine.map(this.racine.transformer);
     }
 
+    public void supprimer(String extension) throws UnableToDeleteFileException {
+        this.racine.supprimer(extension);
+    }
+
     public class Noeud {
         private String nom;
         private int taille;
@@ -46,6 +49,43 @@ public class Arbre {
                 this.repertoire = file.isDirectory();
                 setFils(file);
             }
+        }
+
+        public void supprimer(String extension) throws UnableToDeleteFileException {
+            int l = getNom().split("[.]").length;
+            String fileExtension = getNom().split("[.]")[l-1];
+            if (!getRepertoire()) {
+                File file = new File(this.nom);
+                deleteFile(file, extension, fileExtension);
+            }
+            else {
+                for (Noeud noeud : fils) {
+                    noeud.supprimer(extension);
+                }
+            }
+        }
+
+        public void deleteFile(File file, String extension, String fileExtension) throws UnableToDeleteFileException {
+            if (file.getParentFile() != null) {
+                if (!file.getParentFile().canWrite()) {
+                    throw new UnableToDeleteFileException("File"+file.getName()+" can't be deleted");
+                } else {
+                    if (fileExtension.equals(extension)) {
+                        fakeDelete(this);
+                    }
+                }
+            } else {
+                if (fileExtension.equals(extension)) {
+                    fakeDelete(this);
+                }
+            }
+        }
+
+        public void fakeDelete(Noeud n) {
+            n.fils = null;
+            n.nom = "[DELETED FILE]";
+            n.repertoire = false;
+            n.taille = 0;
         }
 
         public void traverser(String extension) {
@@ -83,7 +123,7 @@ public class Arbre {
         }
 
         public void afficherRec(String space) {
-            if (this.fils.isEmpty()) {
+            if (this.fils == null || this.fils.isEmpty()) {
                 return;
             } else {
                 for (Noeud noeud : fils) {
