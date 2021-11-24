@@ -2,6 +2,7 @@ package src.main.java;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import src.main.java.StringTransformation;
 
 public class Arbre {
     public Noeud racine;
@@ -20,11 +21,18 @@ public class Arbre {
         this.racine.afficherRec(" ");
     }
 
+    public void map() {
+        this.racine.map(this.racine.transformer);
+    }
+
     public class Noeud {
         private String nom;
         private int taille;
         private boolean repertoire;
         private ArrayList<Noeud> fils;
+
+        private StringTransformation transformer = (s) -> setNom(s+".blah");
+
 
         Noeud(File file) throws FileNotFoundException {
             if(!file.exists()) {
@@ -34,6 +42,21 @@ public class Arbre {
                 this.taille = (int)file.length();
                 this.repertoire = file.isDirectory();
                 setFils(file);
+            }
+        }
+
+        public String setNom(String s) {
+            this.nom = s;
+            return s;
+        }
+
+        public void map(StringTransformation t) {
+            if (this.repertoire) {
+                for (Noeud noeud : fils) {
+                    noeud.map(transformer);
+                }
+            } else {
+                this.transformer.transf(this.nom);
             }
         }
 
@@ -48,6 +71,10 @@ public class Arbre {
                     
                 }
             }
+        }
+
+        public boolean getRepertoire() {
+            return this.repertoire;
         }
 
         public String toString() {
